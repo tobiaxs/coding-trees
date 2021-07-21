@@ -38,7 +38,7 @@ jobs:
         uses: snok/install-poetry@v1.1.6
         with:
           virtualenvs-in-project: false
-          virtualenvs-path: ~/.virtualenvs
+          virtualenvs-create: false
 
       - name: Load cached Poetry venv
         id: cached-poetry-dependencies
