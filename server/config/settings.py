@@ -145,10 +145,10 @@ REST_FRAMEWORK = {
 
 # Drf Spectacular
 
+DESCRIPTION = "Decision Trees preparing the programmer for the implementation."
 SPECTACULAR_SETTINGS = {
     "TITLE": "Coding Trees",
-    "DESCRIPTION": "Decision Trees preparing the"
-    "programmer for the implementation.",
+    "DESCRIPTION": DESCRIPTION,
     "VERSION": "0.1.0",
 }
 
