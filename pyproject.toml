@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "django-light-boiler"
+version = "0.1.0"
+description = ""
+authors = ["tobiwankenobii <tobiv1337@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Django = "^3.2.5"
+psycopg2 = "^2.9.1"
+djangorestframework = "^3.12.4"
+django-cors-headers = "^3.7.0"
+drf-spectacular = "^0.17.2"
+djangorestframework-simplejwt = "^4.7.2"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "^2.13.0"
+pytest = "^6.2.4"
+pytest-django = "^4.4.0"
+pytest-cov = "^2.12.1"
+wemake-python-styleguide = "^0.15.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 80
+exclude = "migrations"
+
+[tool.pytest.ini_options]
+testpaths = ["server"]
+addopts = "--cov-fail-under=98 --no-migrations --cache-clear --cov=server --cov-report=html --cov-branch --no-cov-on-fail"
+
+[tool.isort]
+profile = "black"
+default_section = "THIRDPARTY"
+known_first_party = ["server", "apps"]

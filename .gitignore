@@ -1,0 +1,18 @@
+# IDEs
+/.vscode
+/.idea
+
+# Environment
+/venv
+/env
+
+# Django
+/server/static
+/htmlcov
+db.sqlite3
+
+# Cache
+**/.mypy_cache
+**/.pytest_cache
+**/__pycache__
+.coverage
