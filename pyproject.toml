@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "django-light-boiler"
+name = "coding-trees"
 version = "0.1.0"
 description = ""
 authors = ["tobiwankenobii <tobiv1337@gmail.com>"]

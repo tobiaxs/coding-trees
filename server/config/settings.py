@@ -146,8 +146,9 @@ REST_FRAMEWORK = {
 # Drf Spectacular
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Django Light Boiler",
-    "DESCRIPTION": "Universal and versatile Django project starter",
+    "TITLE": "Coding Trees",
+    "DESCRIPTION": "Decision Trees preparing the"
+    "programmer for the implementation.",
     "VERSION": "0.1.0",
 }
 
