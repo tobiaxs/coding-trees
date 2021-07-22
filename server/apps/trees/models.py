@@ -2,7 +2,6 @@
 from typing import Optional
 
 from django.db import models
-from django.db.models.query_utils import F, Q  # noqa: WPS347
 
 from server.apps.generic.models import GenericModelWithCreator
 
@@ -39,7 +38,7 @@ class Path(GenericModelWithCreator):
         Returns:
             Optional[Solution]: solution connected to the final step.
         """
-        final_step = self.steps.filter(is_final_step=True).first()
+        final_step = self.steps.filter(is_final=True).first()
         if final_step:
             return final_step.solution
         return None
@@ -60,8 +59,8 @@ class Step(GenericModelWithCreator):
     """
 
     name = models.TextField()
-    is_first_step = models.BooleanField(default=False)
-    is_final_step = models.BooleanField(default=False)
+    is_first = models.BooleanField(default=False)
+    is_final = models.BooleanField(default=False)
     solution = models.ForeignKey(
         "Solution",
         related_name="final_steps",
@@ -81,16 +80,15 @@ class Step(GenericModelWithCreator):
     class Meta:
         constraints = (
             models.CheckConstraint(
-                check=Q(is_first_step=True) & Q(is_final_step=True),
+                check=models.Q(is_first=False) | models.Q(is_final=False),
                 name="not_first_and_final",
             ),
             models.CheckConstraint(
-                check=Q(is_final_step=True) & Q(solution__isnull=True),
+                check=(
+                    models.Q(is_final=False, solution__isnull=True)
+                    | models.Q(is_final=True, solution__isnull=False)
+                ),
                 name="not_final_with_no_solution",
-            ),
-            models.CheckConstraint(
-                check=Q(options__isnull=False) & Q(solution__isnull=False),
-                name="not_both_options_and_solution",
             ),
         )
 
@@ -111,6 +109,8 @@ class Option(GenericModelWithCreator):
         "Step",
         related_name="preceding_options",
         on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
 
     def __str__(self) -> str:
@@ -124,7 +124,7 @@ class Option(GenericModelWithCreator):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=Q(step=F("next_step")),
+                check=~models.Q(step=models.F("next_step")),
                 name="steps_not_equal",
             ),
         ]
