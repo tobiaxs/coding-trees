@@ -32,7 +32,7 @@ DJANGO_APPS = [
 EXTERNAL_APPS = ["rest_framework", "corsheaders", "drf_spectacular"]
 
 APPS_PREFIX = "server.apps"
-LOCAL_APPS = ["generic", "users"]
+LOCAL_APPS = ["generic", "users", "trees"]
 LOCAL_APPS = [f"{APPS_PREFIX}.{app}" for app in LOCAL_APPS]
 
 INSTALLED_APPS = DJANGO_APPS + EXTERNAL_APPS + LOCAL_APPS
@@ -146,6 +146,7 @@ REST_FRAMEWORK = {
 # Drf Spectacular
 
 DESCRIPTION = "Decision Trees preparing the programmer for the implementation."
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "Coding Trees",
     "DESCRIPTION": DESCRIPTION,
