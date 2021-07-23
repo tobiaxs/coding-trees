@@ -5,11 +5,13 @@ from django.db import models
 
 from server.apps.generic.models import GenericModelWithCreator
 
+NAME_MAX_LENGTH = 63
+
 
 class Tree(GenericModelWithCreator):
     """Highest level model, containing and grouping several paths."""
 
-    name = models.TextField()
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
     paths = models.ManyToManyField("Path", related_name="trees", blank=True)
 
     def __str__(self) -> str:
@@ -20,11 +22,14 @@ class Tree(GenericModelWithCreator):
         """
         return self.name
 
+    class Meta:
+        unique_together = ("name", "creator")
+
 
 class Path(GenericModelWithCreator):
     """Container for all the steps which belong to the tree."""
 
-    name = models.TextField()
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
     steps = models.ManyToManyField(
         "Step",
         related_name="paths",
@@ -58,7 +63,7 @@ class Step(GenericModelWithCreator):
     Final step also contain the solution.
     """
 
-    name = models.TextField()
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
     is_first = models.BooleanField(default=False)
     is_final = models.BooleanField(default=False)
     solution = models.ForeignKey(
@@ -99,7 +104,7 @@ class Option(GenericModelWithCreator):
     Has to know which step it should lead to.
     """
 
-    name = models.TextField()
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
     step = models.ForeignKey(
         "Step",
         related_name="options",
@@ -136,7 +141,7 @@ class Solution(GenericModelWithCreator):
     It is meant to be a design pattern, or other structural hint.
     """
 
-    name = models.TextField()
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
     slug = models.TextField()
 
     def __str__(self) -> str:
