@@ -17,3 +17,12 @@ class GenericModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class GenericModelWithCreator(GenericModel):
+    """Abstract model for models that require a creator."""
+
+    creator = models.ForeignKey("users.User", on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
