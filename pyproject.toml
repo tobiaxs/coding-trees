@@ -35,5 +35,6 @@ addopts = "--cov-fail-under=98 --no-migrations --cache-clear --cov=server --cov-
 
 [tool.isort]
 profile = "black"
+line_length = 80
 default_section = "THIRDPARTY"
 known_first_party = ["server", "apps"]

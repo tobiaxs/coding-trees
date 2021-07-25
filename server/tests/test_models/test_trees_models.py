@@ -82,27 +82,3 @@ def test_steps_not_equal_constraint(
     option.next_step = step
     with pytest.raises(IntegrityError):
         option.save()
-
-
-# Properties
-
-
-def test_path_solution_property(
-    path_factory: PathFactory,
-    step_factory: StepFactory,
-    solution_factory: SolutionFactory,
-):
-    """Check if solution property returns solution from the final step."""
-    path = path_factory()
-    steps = [
-        step_factory(is_first=True),
-        step_factory(is_final=True, solution=solution_factory()),
-    ]
-    path.steps.set(steps)
-    assert path.solution == steps[-1].solution
-
-
-def test_path_no_solution_property(path_factory: PathFactory):
-    """Check if solution property returns None when there is no final step."""
-    path = path_factory()
-    assert path.solution is None

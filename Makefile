@@ -19,3 +19,15 @@ makemigrations:
 ## Run the migrate command
 migrate:
 	docker-compose exec django python manage.py migrate
+
+
+.PHONY: shell
+## Run the shell
+shell:
+	docker-compose exec django python manage.py shell
+
+
+.PHONY: superuser
+## Run the createsuperuser command
+superuser:
+	docker-compose exec django python manage.py createsuperuser

@@ -29,7 +29,11 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-EXTERNAL_APPS = ["rest_framework", "corsheaders", "drf_spectacular"]
+EXTERNAL_APPS = [
+    "rest_framework",
+    "corsheaders",
+    "drf_spectacular",
+]
 
 APPS_PREFIX = "server.apps"
 LOCAL_APPS = ["generic", "users", "trees"]

@@ -1,5 +1,4 @@
 """Trees app models."""
-from typing import Optional
 
 from django.db import models
 
@@ -36,18 +35,6 @@ class Path(GenericModelWithCreator):
         blank=True,
     )
 
-    @property
-    def solution(self) -> Optional["Solution"]:
-        """Return solution for the path if the final step exists.
-
-        Returns:
-            Optional[Solution]: solution connected to the final step.
-        """
-        final_step = self.steps.filter(is_final=True).first()
-        if final_step:
-            return final_step.solution
-        return None
-
     def __str__(self) -> str:
         """Return the name of the path.
 
@@ -81,6 +68,23 @@ class Step(GenericModelWithCreator):
             str: name.
         """
         return self.name
+
+    def clean(self) -> None:
+        """Check the fields on the python level.
+
+        Raises:
+            ValidationError: if step is both first and final,
+                if solution is set on non-final step,
+                or there is no solution on final step.
+        """
+        if self.is_first and self.is_final:
+            raise models.ValidationError(
+                "A step cannot be both first and final.",
+            )
+        if self.is_final == (self.solution is None):
+            raise models.ValidationError(
+                "A solution can only be (and has to be) set on the final step.",
+            )
 
     class Meta:
         constraints = (
@@ -125,6 +129,17 @@ class Option(GenericModelWithCreator):
             str: name.
         """
         return self.name
+
+    def clean(self) -> None:
+        """Check the fields on the python level.
+
+        Raises:
+            ValidationError: if the steps are equal.
+        """
+        if self.step == self.next_step:
+            raise models.ValidationError(
+                "A step cannot be the same as the next step.",
+            )
 
     class Meta:
         constraints = [
