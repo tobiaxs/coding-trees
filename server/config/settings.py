@@ -29,7 +29,11 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-EXTERNAL_APPS = ["rest_framework", "corsheaders", "drf_spectacular"]
+EXTERNAL_APPS = [
+    "rest_framework",
+    "corsheaders",
+    "drf_spectacular",
+]
 
 APPS_PREFIX = "server.apps"
 LOCAL_APPS = ["generic", "users", "trees"]
@@ -137,6 +141,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Rest Framework
 
 REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),

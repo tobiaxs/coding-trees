@@ -21,4 +21,8 @@ urlpatterns += [
         "api/users/",
         include("server.apps.users.api.urls", namespace="users"),
     ),
+    path(
+        "api/trees/",
+        include("server.apps.trees.api.urls", namespace="trees"),
+    ),
 ]

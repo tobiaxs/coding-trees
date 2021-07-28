@@ -1,6 +1,6 @@
-"""Test for tree app models."""
+"""Tests for tree app models."""
 import pytest
-from django.db.utils import IntegrityError
+from django.core.exceptions import ValidationError
 
 from server.tests.conftest import (
     OptionFactory,
@@ -57,7 +57,7 @@ def test_not_first_and_final_constraint(step_factory: StepFactory):
     step = step_factory()
     step.is_first = True
     step.is_final = True
-    with pytest.raises(IntegrityError):
+    with pytest.raises(ValidationError):
         step.save()
 
 
@@ -68,7 +68,7 @@ def test_not_final_with_no_solution_constraint(step_factory: StepFactory):
     """
     step = step_factory()
     step.is_final = True
-    with pytest.raises(IntegrityError):
+    with pytest.raises(ValidationError):
         step.save()
 
 
@@ -80,29 +80,5 @@ def test_steps_not_equal_constraint(
     step = step_factory()
     option = option_factory(step=step)
     option.next_step = step
-    with pytest.raises(IntegrityError):
+    with pytest.raises(ValidationError):
         option.save()
-
-
-# Properties
-
-
-def test_path_solution_property(
-    path_factory: PathFactory,
-    step_factory: StepFactory,
-    solution_factory: SolutionFactory,
-):
-    """Check if solution property returns solution from the final step."""
-    path = path_factory()
-    steps = [
-        step_factory(is_first=True),
-        step_factory(is_final=True, solution=solution_factory()),
-    ]
-    path.steps.set(steps)
-    assert path.solution == steps[-1].solution
-
-
-def test_path_no_solution_property(path_factory: PathFactory):
-    """Check if solution property returns None when there is no final step."""
-    path = path_factory()
-    assert path.solution is None

@@ -15,6 +15,16 @@ class GenericModel(models.Model):
     )
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
 
+    def save(self, *args, **kwargs) -> None:
+        """Call full_clean() before saving.
+
+        Args:
+            args(list): save arguments.
+            kwargs(dict): save keyword arguments.
+        """
+        self.full_clean()
+        super().save(*args, **kwargs)
+
     class Meta:
         abstract = True
 
