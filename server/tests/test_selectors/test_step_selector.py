@@ -1,4 +1,4 @@
-"""Test for step selector classes."""
+"""Tests for step selector classes."""
 
 import pytest
 

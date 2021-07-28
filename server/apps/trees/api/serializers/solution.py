@@ -13,7 +13,7 @@ class SolutionModelSerializer(serializers.ModelSerializer):
         fields = (
             "pk",
             "name",
-            "slug",
+            "description",
             "creator",
         )
 
@@ -22,10 +22,10 @@ class SolutionInputSerializer(serializers.Serializer):
     """Write only option serializer."""
 
     name = serializers.CharField(max_length=NAME_MAX_LENGTH)
-    slug = serializers.SlugField()
+    description = serializers.CharField()
 
     class Meta:
         fields = (
             "name",
-            "slug",
+            "description",
         )

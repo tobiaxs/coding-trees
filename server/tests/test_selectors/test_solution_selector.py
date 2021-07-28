@@ -1,4 +1,4 @@
-"""Test for solution selector classes."""
+"""Tests for solution selector classes."""
 
 import pytest
 

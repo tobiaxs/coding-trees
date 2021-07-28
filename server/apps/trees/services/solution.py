@@ -11,14 +11,14 @@ class SolutionCreatePayload(TypedDict):
 
     name: str
     creator: User
-    slug: str
+    description: str
 
 
 class SolutionUpdatePayload(TypedDict):
     """Payload for updating existing solution."""
 
     name: str
-    slug: str
+    description: str
 
 
 class SolutionService:
@@ -53,6 +53,6 @@ class SolutionService:
             Solution: updated solution instance.
         """
         instance.name = payload["name"]
-        instance.slug = payload["slug"]
+        instance.description = payload["description"]
         instance.save()
         return instance

@@ -30,6 +30,24 @@ class OptionInputSerializer(serializers.Serializer):
         allow_null=True,
     )
 
+    def validate(self, data: dict) -> dict:
+        """Check the model constrains.
+
+        Args:
+            data (dict): data to validate.
+
+        Raises:
+            ValidationError: if the steps are equal.
+
+        Returns:
+            dict: data after validation.
+        """
+        if data["step"] == data.get("next_step"):
+            raise serializers.ValidationError(
+                "A step cannot be the same as the next step.",
+            )
+        return data
+
     class Meta:
         fields = (
             "name",

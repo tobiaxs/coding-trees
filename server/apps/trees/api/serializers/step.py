@@ -32,8 +32,8 @@ class StepModelSerializer(serializers.ModelSerializer):
         )
 
 
-class StepInputSerializer(serializers.Serializer):
-    """Write only step serializer."""
+class StepCreateSerializer(serializers.Serializer):
+    """Write only step serializer for creating instances."""
 
     name = serializers.CharField(max_length=NAME_MAX_LENGTH)
     is_first = serializers.BooleanField(default=False)
@@ -51,6 +51,30 @@ class StepInputSerializer(serializers.Serializer):
         allow_null=True,
     )
 
+    def validate(self, data: dict) -> dict:
+        """Check the model constrains.
+
+        Args:
+            data (dict): data to validate.
+
+        Raises:
+            ValidationError: if step is both first and final,
+                if solution is set on non-final step,
+                or there is no solution on final step.
+
+        Returns:
+            dict: data after validation.
+        """
+        if data["is_first"] and data["is_final"]:
+            raise serializers.ValidationError(
+                "A step cannot be both first and final.",
+            )
+        if data["is_final"] == (data.get("solution") is None):
+            raise serializers.ValidationError(
+                "A solution can only be (and has to be) set on the final step.",
+            )
+        return data
+
     class Meta:
         fields = (
             "name",
@@ -59,3 +83,12 @@ class StepInputSerializer(serializers.Serializer):
             "solution",
             "paths",
         )
+
+
+class StepUpdateSerializer(serializers.Serializer):
+    """Write only step serializer for updating instances."""
+
+    name = serializers.CharField(max_length=NAME_MAX_LENGTH)
+
+    class Meta:
+        fields = ("name",)

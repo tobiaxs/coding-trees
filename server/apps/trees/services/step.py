@@ -1,19 +1,19 @@
 """Create-update services for Step model."""
 
-from typing import Iterable, Optional, TypedDict
+from typing import Iterable, TypedDict
 
 from server.apps.trees.models import Option, Path, Solution, Step
 from server.apps.users.models import User
 
 
-class StepCreatePayload(TypedDict):
+class StepCreatePayload(TypedDict, total=False):
     """Payload for creating new step."""
 
     name: str
     creator: User
     is_first: bool
     is_final: bool
-    solution: Optional[Solution]
+    solution: Solution
     path: Path
     preceding_options: Iterable[Option]
 
@@ -50,7 +50,7 @@ class StepService:
 
         Args:
             instance (Step): current step instance.
-            payload (StepUpdatePayload): payload containing new tree data.
+            payload (StepUpdatePayload): payload containing new step data.
 
         Returns:
             Step: updated step instance.

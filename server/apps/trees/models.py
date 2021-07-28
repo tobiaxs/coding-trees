@@ -1,5 +1,6 @@
 """Trees app models."""
 
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from server.apps.generic.models import GenericModelWithCreator
@@ -78,11 +79,9 @@ class Step(GenericModelWithCreator):
                 or there is no solution on final step.
         """
         if self.is_first and self.is_final:
-            raise models.ValidationError(
-                "A step cannot be both first and final.",
-            )
+            raise ValidationError("A step cannot be both first and final.")
         if self.is_final == (self.solution is None):
-            raise models.ValidationError(
+            raise ValidationError(
                 "A solution can only be (and has to be) set on the final step.",
             )
 
@@ -137,7 +136,7 @@ class Option(GenericModelWithCreator):
             ValidationError: if the steps are equal.
         """
         if self.step == self.next_step:
-            raise models.ValidationError(
+            raise ValidationError(
                 "A step cannot be the same as the next step.",
             )
 
@@ -157,7 +156,7 @@ class Solution(GenericModelWithCreator):
     """
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)
-    slug = models.TextField()
+    description = models.TextField()
 
     def __str__(self) -> str:
         """Return the name of the solution.

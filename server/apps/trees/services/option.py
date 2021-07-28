@@ -1,6 +1,6 @@
 """Create-update services for Option model."""
 
-from typing import Optional, TypedDict
+from typing import TypedDict
 
 from server.apps.trees.models import Option, Step
 from server.apps.users.models import User
@@ -12,7 +12,7 @@ class OptionCreatePayload(TypedDict):
     name: str
     creator: User
     step: Step
-    next_step: Optional[Step]
+    next_step: Step
 
 
 class OptionUpdatePayload(TypedDict):
@@ -55,6 +55,6 @@ class OptionService:
         """
         instance.name = payload["name"]
         instance.step = payload["step"]
-        instance.next_step = payload["next_step"]
+        instance.next_step = payload.get("next_step")
         instance.save()
         return instance

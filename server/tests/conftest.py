@@ -25,7 +25,10 @@ def api_client() -> APIClient:
     Returns:
         APIClient: A configured API client.
     """
-    user = User.objects.create_user(**dict(TEST_USER_CREDENTIALS))
+    user = User.objects.create_user(
+        **dict(TEST_USER_CREDENTIALS),
+        is_superuser=True,
+    )
     client = APIClient()
     refresh = RefreshToken.for_user(user)
     client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
@@ -41,6 +44,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     username = fuzzy.FuzzyText(length=10)
     email = fuzzy.FuzzyText(length=10, suffix="@email.com")
+    password = fuzzy.FuzzyText(length=10)
 
     class Meta:
         model = User
@@ -98,6 +102,7 @@ class SolutionFactory(factory.django.DjangoModelFactory):
 
     name = fuzzy.FuzzyText(length=10)
     creator = factory.SubFactory(UserFactory)
+    description = fuzzy.FuzzyText(length=10)
 
     class Meta:
         model = Solution
