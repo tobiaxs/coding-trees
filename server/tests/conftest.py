@@ -81,6 +81,7 @@ class StepFactory(factory.django.DjangoModelFactory):
 
     name = fuzzy.FuzzyText(length=10)
     creator = factory.SubFactory(UserFactory)
+    path = factory.SubFactory(PathFactory)
 
     class Meta:
         model = Step

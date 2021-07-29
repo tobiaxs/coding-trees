@@ -3,6 +3,13 @@
 lint:
 	poetry run pre-commit run --all-files
 
+
+.PHONY: full-lint
+## Stage all and run pre-commit checks
+full-lint:
+	git add . & poetry run pre-commit run --all-files
+
+
 .PHONY: test
 ## Run the tests inside the container with pytest
 test:

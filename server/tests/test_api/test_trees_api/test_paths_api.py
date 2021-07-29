@@ -46,8 +46,7 @@ def test_path_delete_api(
 ):
     """Test deleting path instance and connected steps using path api."""
     path = path_factory()
-    steps = [step_factory() for _ in range(3)]
-    path.steps.set(steps)
+    step_factory.create_batch(3, path=path)
     response = api_client.delete(
         reverse("trees:paths-detail", kwargs={"pk": path.pk}),
     )
@@ -55,26 +54,3 @@ def test_path_delete_api(
     assert response.status_code == HTTP_204_NO_CONTENT
     assert Path.objects.count() == 0
     assert Step.objects.count() == 0
-
-
-def test_path_delete_api_with_different_path(
-    api_client: APIClient,
-    path_factory: PathFactory,
-    step_factory: StepFactory,
-):
-    """Test deleting path instance and connected steps using path api.
-
-    One step is connected to another path.
-    """
-    path = path_factory()
-    steps = [step_factory() for _ in range(3)]
-    path.steps.set(steps)
-    different_path = path_factory()
-    different_path.steps.add(steps[0])
-    response = api_client.delete(
-        reverse("trees:paths-detail", kwargs={"pk": path.pk}),
-    )
-
-    assert response.status_code == HTTP_204_NO_CONTENT
-    assert Path.objects.count() == 1
-    assert Step.objects.count() == 1

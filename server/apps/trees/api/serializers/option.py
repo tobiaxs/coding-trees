@@ -13,9 +13,6 @@ class OptionModelSerializer(serializers.ModelSerializer):
         fields = (
             "pk",
             "name",
-            "step",
-            "next_step",
-            "creator",
         )
 
 

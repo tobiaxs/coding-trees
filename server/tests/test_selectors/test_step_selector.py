@@ -2,58 +2,74 @@
 
 import pytest
 
+from server.apps.trees.models import Tree
 from server.apps.trees.selectors import StepSelector
-from server.tests.conftest import (
-    OptionFactory,
-    PathFactory,
-    StepFactory,
-    TreeFactory,
-)
+from server.tests.conftest import OptionFactory, StepFactory, TreeFactory
 
 pytestmark = [pytest.mark.django_db]
 
 
-def test_first_step_for_tree(
-    tree_factory: TreeFactory,
-    path_factory: PathFactory,
-    step_factory: StepFactory,
-):
-    """Check if the first step is returned for given tree.
+def create_path_step_options_for_tree(
+    step_name: str,
+    tree: Tree,
+    options_no: int = 1,
+) -> None:
+    """Create a path, step with given name and given number of options.
 
-    Only one 'is_first' is present.
+    Args:
+        step_name (str): name of the step.
+        tree (Tree): tree for which the path is created.
+        options_no (int): number of options to create. Defaults to 1.
+    """
+    step = StepFactory(name=step_name, is_first=True)
+    OptionFactory.create_batch(options_no, step=step)
+    tree.paths.add(step.path)
+
+
+def test_first_step_name_for_tree(
+    tree_factory: TreeFactory,
+):
+    """Check if the first step name is returned for given tree.
+
+    Only one step name is present.
     """
     tree = tree_factory()
-    path = path_factory()
-    steps = [step_factory() for _ in range(3)]
+    for _ in range(3):
+        create_path_step_options_for_tree("First Step", tree)
+    step_name = StepSelector.first_name_for_tree(tree)
 
-    tree.paths.add(path)
-    path.steps.set(steps)
-    steps[0].is_first = True
-    steps[0].save()
-
-    assert StepSelector.first_for_tree(tree) == steps[0]
+    assert step_name == "First Step"
 
 
-def test_multiple_first_steps_for_tree(
+def test_first_step_name_for_tree_many_steps(
     tree_factory: TreeFactory,
-    path_factory: PathFactory,
-    step_factory: StepFactory,
-    option_factory: OptionFactory,
 ):
-    """Check if the first step is returned for given tree.
+    """Check if the first step name is returned for given tree.
 
-    Multiple 'is_first' are present,
-    the one with the most options should be returned.
+    Two step names are present. Steps majority has the most options.
+    3 steps with 3 options combined and 1 step with 1 option.
     """
     tree = tree_factory()
-    paths = [path_factory() for _ in range(3)]
-    steps = [step_factory(is_first=True) for _ in range(3)]
+    for _ in range(3):
+        create_path_step_options_for_tree("First Step", tree)
+    create_path_step_options_for_tree("Another First Step", tree)
+    step_name = StepSelector.first_name_for_tree(tree)
 
-    for index, step in enumerate(steps):
-        path = paths[index]
-        path.steps.add(step)
-        step.options.set([option_factory() for _ in range(index)])
+    assert step_name == "First Step"
 
-    tree.paths.set(paths)
 
-    assert StepSelector.first_for_tree(tree) == steps[-1]
+def test_first_step_name_for_tree_less_steps(
+    tree_factory: TreeFactory,
+):
+    """Check if the first step name is returned for given tree.
+
+    Two step names are present. Steps minority has the most options.
+    3 steps with 3 options combined and 1 step with 4 options.
+    """
+    tree = tree_factory()
+    for _ in range(3):
+        create_path_step_options_for_tree("First Step", tree)
+    create_path_step_options_for_tree("Another First Step", tree, 4)
+    step_name = StepSelector.first_name_for_tree(tree)
+
+    assert step_name == "Another First Step"

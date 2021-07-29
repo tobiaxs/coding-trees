@@ -31,7 +31,7 @@ def test_step_create_api(api_client: APIClient, path_factory: PathFactory):
 
     assert response.status_code == HTTP_201_CREATED
     assert created_step
-    assert created_step.paths.first() == path
+    assert created_step.path == path
 
 
 def test_step_create_api_with_options(
@@ -43,7 +43,7 @@ def test_step_create_api_with_options(
 
     Preceding options are passed to the step.
     """
-    preceding_options = [option_factory().pk for _ in range(3)]
+    preceding_options = [option.pk for option in option_factory.create_batch(3)]
     response = api_client.post(
         reverse("trees:steps-list"),
         data={

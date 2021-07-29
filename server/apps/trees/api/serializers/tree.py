@@ -42,17 +42,3 @@ class TreeUpdateSerializer(serializers.Serializer):
 
     class Meta:
         fields = ("name", "paths")
-
-
-class DecisionTreeModelSerializer(serializers.ModelSerializer):
-    """Read only tree model serializer with nested instances.
-
-    Simulation of a decision tree.
-    """
-
-    class Meta:
-        model = Tree
-        fields = (
-            "pk",
-            "paths",
-        )
