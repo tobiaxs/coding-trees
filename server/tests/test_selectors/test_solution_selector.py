@@ -3,7 +3,7 @@
 import pytest
 
 from server.apps.trees.selectors import SolutionSelector
-from server.tests.conftest import PathFactory, SolutionFactory, StepFactory
+from server.tests.factories import PathFactory, SolutionFactory, StepFactory
 
 pytestmark = [pytest.mark.django_db]
 

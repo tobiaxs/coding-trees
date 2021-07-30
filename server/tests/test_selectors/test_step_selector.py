@@ -2,28 +2,11 @@
 
 import pytest
 
-from server.apps.trees.models import Tree
 from server.apps.trees.selectors import StepSelector
-from server.tests.conftest import OptionFactory, StepFactory, TreeFactory
+from server.tests.factories import TreeFactory
+from server.tests.test_helpers import create_path_step_options_for_tree
 
 pytestmark = [pytest.mark.django_db]
-
-
-def create_path_step_options_for_tree(
-    step_name: str,
-    tree: Tree,
-    options_no: int = 1,
-) -> None:
-    """Create a path, step with given name and given number of options.
-
-    Args:
-        step_name (str): name of the step.
-        tree (Tree): tree for which the path is created.
-        options_no (int): number of options to create. Defaults to 1.
-    """
-    step = StepFactory(name=step_name, is_first=True)
-    OptionFactory.create_batch(options_no, step=step)
-    tree.paths.add(step.path)
 
 
 def test_first_step_name_for_tree(

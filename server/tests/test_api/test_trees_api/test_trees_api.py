@@ -6,7 +6,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.test import APIClient
 
 from server.apps.trees.models import Tree
-from server.tests.conftest import TreeFactory
+from server.tests.factories import TreeFactory
 
 pytestmark = [pytest.mark.django_db]
 

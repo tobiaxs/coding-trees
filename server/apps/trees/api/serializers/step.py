@@ -32,7 +32,7 @@ class StepModelSerializer(serializers.ModelSerializer):
         )
 
 
-class FirstStepModelSerializer(serializers.ModelSerializer):
+class TreeStepModelSerializer(serializers.ModelSerializer):
     """Read only step model serializer with nested instances.
 
     Used for displaying first step of the entire tree.

@@ -10,7 +10,7 @@ from rest_framework.status import (
 from rest_framework.test import APIClient
 
 from server.apps.trees.models import Option
-from server.tests.conftest import OptionFactory, StepFactory
+from server.tests.factories import OptionFactory, StepFactory
 
 pytestmark = [pytest.mark.django_db]
 

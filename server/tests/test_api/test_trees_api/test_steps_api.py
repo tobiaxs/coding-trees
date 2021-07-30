@@ -10,7 +10,7 @@ from rest_framework.status import (
 from rest_framework.test import APIClient
 
 from server.apps.trees.models import Step
-from server.tests.conftest import (
+from server.tests.factories import (
     OptionFactory,
     PathFactory,
     SolutionFactory,

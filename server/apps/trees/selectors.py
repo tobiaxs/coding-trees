@@ -12,7 +12,7 @@ class StepSelector:
     """Handle step fetching operations."""
 
     @classmethod
-    def first_name_for_tree(cls, tree: Tree) -> str:
+    def first_name_for_tree(cls, tree: Tree) -> Optional[str]:
         """Return name of first step for a tree.
 
         First step is considered to be 'is_first' with the most options
@@ -32,7 +32,9 @@ class StepSelector:
             .order_by("-options_count")
         ).first()
 
-        return step_name_and_count["name"]
+        if step_name_and_count:
+            return step_name_and_count["name"]
+        return None
 
 
 class OptionSelector:
