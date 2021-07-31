@@ -12,6 +12,8 @@ Django project for creating decision trees, which are meant to help programmers 
 The inspiration for this project was a operator decision tree of [the RxJS library](https://rxjs.dev/operator-decision-tree).
 My idea was to generalize this functionality, so that such trees could be created for each library or framework, or for general programming concepts, such as design patterns.
 
+[**See the Coding Trees documentation for more information**](https://google.com).
+
 ## Getting started
 
 The local setup is made with docker-compose. Example and working `.env` file is in `docker` folder and it's connected
@@ -28,3 +30,5 @@ Running the containers
 ```shell
 docker-compose up
 ```
+
+You can also find useful commands in the Makefile.

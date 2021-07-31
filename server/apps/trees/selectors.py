@@ -49,12 +49,12 @@ class OptionSelector:
             tree (Tree): tree of the path that has the step.
 
         Returns:
-            QuerySet: all options for the step and tree.
+            QuerySet: all options with distinct name for the step and tree.
         """
         return Option.objects.filter(
             step__name=step_name,
             step__path__trees=tree,
-        )
+        ).distinct("name")
 
 
 class SolutionSelector:
