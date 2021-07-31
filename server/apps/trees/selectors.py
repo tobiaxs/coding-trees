@@ -3,33 +3,58 @@
 from typing import Optional
 
 from django.db.models import Count
+from django.db.models.query import QuerySet
 
-from server.apps.trees.models import Path, Solution, Step, Tree
+from server.apps.trees.models import Option, Path, Solution, Step, Tree
 
 
 class StepSelector:
     """Handle step fetching operations."""
 
     @classmethod
-    def first_for_tree(cls, tree: Tree) -> Optional[Step]:
-        """Return the first step for the tree.
+    def first_name_for_tree(cls, tree: Tree) -> Optional[str]:
+        """Return name of first step for a tree.
 
-        If multiple first steps are found, return the one with the most options.
+        First step is considered to be 'is_first' with the most options
+        for the same name.
 
         Args:
-            tree (Tree): given tree.
+            tree (Tree): tree to get step for.
 
         Returns:
-            Optional[Step]: first step for the tree.
+            str: name of the step that is first
+                and will return the most options.
         """
-        steps = Step.objects.filter(paths__trees=tree, is_first=True)
-        if steps.count() > 1:
-            return (
-                steps.annotate(options_count=Count("options"))
-                .order_by("-options_count")
-                .first()
-            )
-        return steps.first()
+        step_name_and_count = (
+            Step.objects.filter(path__trees=tree, is_first=True)
+            .values("name")
+            .annotate(options_count=Count("options"))
+            .order_by("-options_count")
+        ).first()
+
+        if step_name_and_count:
+            return step_name_and_count["name"]
+        return None
+
+
+class OptionSelector:
+    """Handle option fetching operations."""
+
+    @classmethod
+    def for_step_name_and_tree(cls, step_name: str, tree: Tree) -> QuerySet:
+        """Return all options for a given step name and tree.
+
+        Args:
+            step_name (str): name of the step.
+            tree (Tree): tree of the path that has the step.
+
+        Returns:
+            QuerySet: all options for the step and tree.
+        """
+        return Option.objects.filter(
+            step__name=step_name,
+            step__path__trees=tree,
+        )
 
 
 class SolutionSelector:

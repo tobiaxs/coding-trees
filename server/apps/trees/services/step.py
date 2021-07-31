@@ -37,10 +37,8 @@ class StepService:
         Returns:
             Step: created step instance.
         """
-        path = payload.pop("path")
         preceding_options = payload.pop("preceding_options")
         step = Step.objects.create(**payload)
-        step.paths.add(path)
         step.preceding_options.set(preceding_options)
         return step
 

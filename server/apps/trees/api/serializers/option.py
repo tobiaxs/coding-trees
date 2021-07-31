@@ -10,13 +10,7 @@ class OptionModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Option
-        fields = (
-            "pk",
-            "name",
-            "step",
-            "next_step",
-            "creator",
-        )
+        fields = ("pk", "name", "next_step")
 
 
 class OptionInputSerializer(serializers.Serializer):

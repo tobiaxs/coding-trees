@@ -30,11 +30,6 @@ class Path(GenericModelWithCreator):
     """Container for all the steps which belong to the tree."""
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)
-    steps = models.ManyToManyField(
-        "Step",
-        related_name="paths",
-        blank=True,
-    )
 
     def __str__(self) -> str:
         """Return the name of the path.
@@ -52,6 +47,11 @@ class Step(GenericModelWithCreator):
     """
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)
+    path = models.ForeignKey(
+        "Path",
+        on_delete=models.CASCADE,
+        related_name="steps",
+    )
     is_first = models.BooleanField(default=False)
     is_final = models.BooleanField(default=False)
     solution = models.ForeignKey(
@@ -86,6 +86,7 @@ class Step(GenericModelWithCreator):
             )
 
     class Meta:
+        unique_together = ("name", "path")
         constraints = (
             models.CheckConstraint(
                 check=models.Q(is_first=False) | models.Q(is_final=False),

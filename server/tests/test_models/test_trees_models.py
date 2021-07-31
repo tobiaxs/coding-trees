@@ -2,7 +2,7 @@
 import pytest
 from django.core.exceptions import ValidationError
 
-from server.tests.conftest import (
+from server.tests.factories import (
     OptionFactory,
     PathFactory,
     SolutionFactory,

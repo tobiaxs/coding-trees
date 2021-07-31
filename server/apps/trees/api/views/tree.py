@@ -1,11 +1,14 @@
 """Tree model related views."""
 
+
 from rest_framework import viewsets
 
-from server.apps.trees.api.mixins import SerializerPerActionMixin
+from server.apps.trees.api.mixins import (
+    SerializerPerActionMixin,
+    TreeStepsMixin,
+)
 from server.apps.trees.api.permissions import IsSuperuserOrReadOnly
 from server.apps.trees.api.serializers.tree import (
-    DecisionTreeModelSerializer,
     TreeCreateSerializer,
     TreeModelSerializer,
     TreeUpdateSerializer,
@@ -21,6 +24,7 @@ from server.apps.trees.services.tree import (
 class TreeViewSet(
     SerializerPerActionMixin,
     viewsets.ModelViewSet,
+    TreeStepsMixin,
 ):
     """Crud viewset for Tree model."""
 
@@ -55,10 +59,3 @@ class TreeViewSet(
         """
         payload = TreeUpdatePayload(**serializer.validated_data)
         TreeService.update_tree(serializer.instance, payload)
-
-
-class DecisionTreeViewSet(viewsets.ReadOnlyModelViewSet):
-    """Read only viewset for simulating decision trees."""
-
-    queryset = Tree.objects.all()
-    serializer_class = DecisionTreeModelSerializer

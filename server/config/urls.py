@@ -1,12 +1,20 @@
 """URLs config for the server project."""
+
 from django.contrib import admin
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import include, path
+from django.views.generic.base import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 # Default URL routes.
 urlpatterns = [
+    path("", RedirectView.as_view(url="admin/")),
     path("admin/", admin.site.urls),
     path("api/", include("rest_framework.urls")),
+    path(
+        "favicon.ico",
+        RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
+    ),
 ]
 
 # Swagger URL routes.
