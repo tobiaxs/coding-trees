@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework.status import HTTP_200_OK
 from rest_framework.test import APIClient
 
-from server.apps.trees.models import Step
+from server.apps.trees.models import Option, Step
 from server.tests.factories import OptionFactory, SolutionFactory, TreeFactory
 from server.tests.test_helpers import create_path_step_options_for_tree
 
@@ -164,3 +164,24 @@ def test_tree_next_step_with_solution(
     assert response.status_code == HTTP_200_OK
     assert response.data["name"] == "Second Step"
     assert response.data["solution"]["pk"] == str(step.solution.pk)
+
+
+def test_tree_first_step_same_options(
+    api_client: APIClient,
+    tree_factory: TreeFactory,
+):
+    """Test retrieving first step data for the tree.
+
+    Only one first step, but options are the same.
+    """
+    tree = tree_factory()
+    for _ in range(3):
+        create_path_step_options_for_tree("First Step", tree)
+    Option.objects.all().update(name="All the same name")
+    response = api_client.get(
+        reverse("trees:trees-first-step", kwargs={"pk": tree.pk}),
+    )
+
+    assert response.status_code == HTTP_200_OK
+    assert response.data["name"] == "First Step"
+    assert len(response.data["options"]) == 1

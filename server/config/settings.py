@@ -36,8 +36,8 @@ EXTERNAL_APPS = [
 ]
 
 APPS_PREFIX = "server.apps"
-LOCAL_APPS = ["generic", "users", "trees"]
-LOCAL_APPS = [f"{APPS_PREFIX}.{app}" for app in LOCAL_APPS]
+LOCAL_APPS_NAMES = ["generic", "users", "trees"]
+LOCAL_APPS = [f"{APPS_PREFIX}.{app}" for app in LOCAL_APPS_NAMES]
 
 INSTALLED_APPS = DJANGO_APPS + EXTERNAL_APPS + LOCAL_APPS
 

@@ -46,6 +46,7 @@ class TreeService:
         Returns:
             Tree: updated tree instance.
         """
+        # TODO: Add validation for steps and options consistency.
         instance.name = payload["name"]
         instance.save()
         instance.paths.set(payload["paths"])
