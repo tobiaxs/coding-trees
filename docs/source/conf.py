@@ -55,4 +55,4 @@ html_static_path = ["_static"]
 autoapi_dirs = [code_dir]
 
 # Ignore migrations and tests.
-autoapi_ignore = ["*migration*", "*test*"]
+autoapi_ignore = ["*/migration*.py", "*/test_*.py"]
