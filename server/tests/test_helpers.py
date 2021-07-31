@@ -21,9 +21,11 @@ def create_path_step_options_for_tree(
             Defaults to False.
     """
     step = StepFactory(name=step_name, is_first=True)
-    option_next_step = (
-        StepFactory(name="Second Step", is_first=False) if next_step else None
-    )
+    if next_step:
+        option_next_step = StepFactory(name="Second Step", is_first=False)
+        tree.paths.add(option_next_step.path)
+    else:
+        option_next_step = None
     OptionFactory.create_batch(
         options_no,
         step=step,

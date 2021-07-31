@@ -35,9 +35,10 @@ class StepModelSerializer(serializers.ModelSerializer):
 class TreeStepModelSerializer(serializers.ModelSerializer):
     """Read only step model serializer with nested instances.
 
-    Used for displaying first step of the entire tree.
+    Used for displaying specific step of the entire tree.
     """
 
+    solution = SolutionModelSerializer(read_only=True, required=False)
     options = OptionModelSerializer(many=True, read_only=True)
 
     class Meta:
@@ -46,6 +47,7 @@ class TreeStepModelSerializer(serializers.ModelSerializer):
             "pk",
             "name",
             "options",
+            "solution",
         )
 
 

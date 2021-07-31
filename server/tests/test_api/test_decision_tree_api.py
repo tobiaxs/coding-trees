@@ -1,13 +1,12 @@
 """Tests for decision tree api."""
 
-
 import pytest
 from django.urls import reverse
 from rest_framework.status import HTTP_200_OK
 from rest_framework.test import APIClient
 
 from server.apps.trees.models import Step
-from server.tests.factories import TreeFactory
+from server.tests.factories import OptionFactory, SolutionFactory, TreeFactory
 from server.tests.test_helpers import create_path_step_options_for_tree
 
 pytestmark = [pytest.mark.django_db]
@@ -113,3 +112,55 @@ def test_tree_next_step(
     assert response.status_code == HTTP_200_OK
     assert response.data["name"] == "Second Step"
     assert not response.data["options"]
+
+
+def test_tree_next_step_with_options(
+    api_client: APIClient,
+    tree_factory: TreeFactory,
+    option_factory: OptionFactory,
+):
+    """Test retrieving next step data with options for the tree."""
+    tree = tree_factory()
+    for _ in range(3):
+        create_path_step_options_for_tree("First Step", tree, next_step=True)
+    steps = Step.objects.filter(name="Second Step")
+    for step in steps:
+        option_factory(step=step)
+    response = api_client.post(
+        reverse(
+            "trees:trees-next-step",
+            kwargs={"pk": tree.pk},
+        ),
+        data={"step": steps.last().pk},
+    )
+
+    assert response.status_code == HTTP_200_OK
+    assert response.data["name"] == "Second Step"
+    assert len(response.data["options"]) == 3
+
+
+def test_tree_next_step_with_solution(
+    api_client: APIClient,
+    tree_factory: TreeFactory,
+    solution_factory: SolutionFactory,
+):
+    """Test retrieving next step data with solution for the tree."""
+    tree = tree_factory()
+    for _ in range(3):
+        create_path_step_options_for_tree("First Step", tree, next_step=True)
+    step = Step.objects.filter(name="Second Step").last()
+    step.is_final = True
+    step.solution = solution_factory()
+    step.save()
+
+    response = api_client.post(
+        reverse(
+            "trees:trees-next-step",
+            kwargs={"pk": tree.pk},
+        ),
+        data={"step": step.pk},
+    )
+
+    assert response.status_code == HTTP_200_OK
+    assert response.data["name"] == "Second Step"
+    assert response.data["solution"]["pk"] == str(step.solution.pk)
