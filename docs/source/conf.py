@@ -3,10 +3,18 @@
 
 # -- Project information -----------------------------------------------------
 
+import sys
+from pathlib import Path
+
 project = "Coding Trees"
 copyright = "2021, tobias"
 author = "tobias"
 
+current_dir = Path(__file__).parent.absolute()
+base_dir = current_dir.parents[1]
+code_dir = base_dir / "server"
+
+sys.path.insert(0, str(code_dir))
 
 # -- General configuration ---------------------------------------------------
 
@@ -22,10 +30,14 @@ extensions = [
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
+# The suffix(es) of source filenames.
+# You can specify multiple suffix as a list of string:
+source_suffix = [".rst"]
+
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["build"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -40,7 +52,7 @@ html_theme = "alabaster"
 html_static_path = ["_static"]
 
 # Include only folder with Django app.
-autoapi_dirs = ["../../server"]
+autoapi_dirs = [code_dir]
 
 # Ignore migrations and tests.
 autoapi_ignore = ["*migration*", "*test*"]
