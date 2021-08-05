@@ -32,4 +32,4 @@ Running the containers
 docker-compose up
 ```
 
-You can also find useful commands in the Makefile.
+You can also find useful commands in the `Makefile`.

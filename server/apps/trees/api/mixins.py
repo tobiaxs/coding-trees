@@ -8,7 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 
 from server.apps.trees.api.serializers.step import TreeStepModelSerializer
-from server.apps.trees.models import Step
+from server.apps.trees.models import Step, Tree
 from server.apps.trees.selectors import OptionSelector, StepSelector
 
 extend_step_schema = extend_schema(
@@ -18,7 +18,7 @@ extend_step_schema = extend_schema(
 
 
 class SerializerPerActionMixin:
-    """Used to allow for different serializers classes per action."""
+    """Allow different serializers classes per action."""
 
     action: str
     serializer_classes: dict[str, type[serializers.Serializer]]
@@ -29,7 +29,7 @@ class SerializerPerActionMixin:
         """Based on the action, return the serializer class.
 
         Returns:
-            type[serializers.Serializer]: serializer class.
+            type[Serializer]: serializer class.
         """
         return self.serializer_classes.get(
             self.action,
@@ -76,7 +76,7 @@ class TreeStepsMixin:
 
     @extend_step_schema
     @action(detail=True, methods=["post"])
-    def next_step(
+    def change_step(
         self: viewsets.ModelViewSet,
         request: Request,
         pk: UUID,
@@ -95,21 +95,31 @@ class TreeStepsMixin:
         """
         tree = self.get_object()
         step = Step.objects.get(pk=request.data["step"])
-        if step.is_final:
-            step_data = {
-                "name": step.name,
-                "solution": step.solution,
-            }
-        else:
-            step_data = {
-                "name": step.name,
-                "options": OptionSelector.for_step_name_and_tree(
-                    step.name,
-                    tree,
-                ),
-            }
+        step_data = self._build_step_data(tree, step)
         serializer = TreeStepModelSerializer(step_data)
         return response.Response(
             status=status.HTTP_200_OK,
             data=serializer.data,
         )
+
+    def _build_step_data(self, tree: Tree, step: Step) -> dict:
+        """Return a dictionary with the step data.
+
+        Args:
+            tree (Tree): tree object.
+            step (Step): step to serialize.
+
+        Returns:
+            dict: serialized step data.
+        """
+        step_data = {"name": step.name}
+        if step.is_final:
+            step_data["solution"] = step.solution
+        else:
+            step_data["options"] = (
+                OptionSelector.for_step_name_and_tree(
+                    step.name,
+                    tree,
+                ),
+            )
+        return step_data

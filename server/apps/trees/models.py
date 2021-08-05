@@ -7,12 +7,15 @@ from server.apps.generic.models import GenericModelWithCreator
 
 NAME_MAX_LENGTH = 63
 
+# TODO: Step and Option don't need a creaton anymore.
+
 
 class Tree(GenericModelWithCreator):
     """Highest level model, containing and grouping several paths."""
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)
     paths = models.ManyToManyField("Path", related_name="trees", blank=True)
+    # TODO: Add inconsistencies model.
 
     def __str__(self) -> str:
         """Return the name of the tree.

@@ -103,7 +103,7 @@ def test_tree_next_step(
     step = Step.objects.get(name="Second Step")
     response = api_client.post(
         reverse(
-            "trees:trees-next-step",
+            "trees:trees-change-step",
             kwargs={"pk": tree.pk},
         ),
         data={"step": step.pk},
@@ -128,7 +128,7 @@ def test_tree_next_step_with_options(
         option_factory(step=step)
     response = api_client.post(
         reverse(
-            "trees:trees-next-step",
+            "trees:trees-change-step",
             kwargs={"pk": tree.pk},
         ),
         data={"step": steps.last().pk},
@@ -155,7 +155,7 @@ def test_tree_next_step_with_solution(
 
     response = api_client.post(
         reverse(
-            "trees:trees-next-step",
+            "trees:trees-change-step",
             kwargs={"pk": tree.pk},
         ),
         data={"step": step.pk},
