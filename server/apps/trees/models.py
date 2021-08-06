@@ -2,6 +2,7 @@
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from martor.models import MartorField
 
 from server.apps.generic.models import GenericModelWithCreator
 
@@ -160,7 +161,7 @@ class Solution(GenericModelWithCreator):
     """
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)
-    description = models.TextField()
+    description = MartorField()
 
     def __str__(self) -> str:
         """Return the name of the solution.

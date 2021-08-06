@@ -33,6 +33,7 @@ EXTERNAL_APPS = [
     "rest_framework",
     "corsheaders",
     "drf_spectacular",
+    "martor",
 ]
 
 APPS_PREFIX = "server.apps"

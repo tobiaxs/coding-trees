@@ -1,4 +1,5 @@
 """Admin site config for the trees app."""
+
 from django.contrib import admin
 
 from server.apps.trees.models import Option, Path, Solution, Step, Tree

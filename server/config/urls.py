@@ -17,6 +17,11 @@ urlpatterns = [
     ),
 ]
 
+# Martor URL routes.
+urlpatterns += [
+    path("martor/", include("martor.urls")),
+]
+
 # Swagger URL routes.
 urlpatterns += [
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
