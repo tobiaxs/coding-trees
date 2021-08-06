@@ -1,6 +1,7 @@
 """Step model related serializers."""
 
 from rest_framework import serializers
+from structlog import get_logger
 
 from server.apps.trees.api.serializers.option import OptionModelSerializer
 from server.apps.trees.api.serializers.solution import SolutionModelSerializer
@@ -11,6 +12,8 @@ from server.apps.trees.models import (
     Solution,
     Step,
 )
+
+log = get_logger()
 
 
 class StepModelSerializer(serializers.ModelSerializer):
@@ -85,10 +88,20 @@ class StepCreateSerializer(serializers.Serializer):
             dict: data after validation.
         """
         if data["is_first"] and data["is_final"]:
+            log.error(
+                "Step is both first and final",
+                name=data["name"],
+                creator=self.context["request"].user.email,
+            )
             raise serializers.ValidationError(
                 "A step cannot be both first and final.",
             )
         if data["is_final"] == (data.get("solution") is None):
+            log.error(
+                "Solution is not on the final step.",
+                name=data["name"],
+                creator=self.context["request"].user.email,
+            )
             raise serializers.ValidationError(
                 "A solution can only be (and has to be) set on the final step.",
             )

@@ -3,12 +3,15 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from martor.models import MartorField
+from structlog import get_logger
 
 from server.apps.generic.models import GenericModelWithCreator
 
 NAME_MAX_LENGTH = 63
 
-# TODO: Step and Option don't need a creaton anymore.
+# TODO: Step and Option don't need a creator anymore.
+
+log = get_logger()
 
 
 class Tree(GenericModelWithCreator):
@@ -83,8 +86,18 @@ class Step(GenericModelWithCreator):
                 or there is no solution on final step.
         """
         if self.is_first and self.is_final:
+            log.error(
+                "Step is both first and final.",
+                name=self.name,
+                creator=self.creator.email,
+            )
             raise ValidationError("A step cannot be both first and final.")
         if self.is_final == (self.solution is None):
+            log.error(
+                "Solution is not on the final step.",
+                name=self.name,
+                creator=self.creator.email,
+            )
             raise ValidationError(
                 "A solution can only be (and has to be) set on the final step.",
             )
@@ -141,6 +154,11 @@ class Option(GenericModelWithCreator):
             ValidationError: if the steps are equal.
         """
         if self.step == self.next_step:
+            log.error(
+                "Steps are equal.",
+                name=self.name,
+                creator=self.creator.email,
+            )
             raise ValidationError(
                 "A step cannot be the same as the next step.",
             )

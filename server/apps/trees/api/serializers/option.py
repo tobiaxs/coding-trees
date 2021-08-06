@@ -1,8 +1,11 @@
 """Option model related serializers."""
 
 from rest_framework import serializers
+from structlog import get_logger
 
 from server.apps.trees.models import NAME_MAX_LENGTH, Option, Step
+
+log = get_logger()
 
 
 class OptionModelSerializer(serializers.ModelSerializer):
@@ -37,6 +40,11 @@ class OptionInputSerializer(serializers.Serializer):
             dict: data after validation.
         """
         if data["step"] == data.get("next_step"):
+            log.error(
+                "Steps are equal",
+                name=data["name"],
+                creator=self.context["request"].user.email,
+            )
             raise serializers.ValidationError(
                 "A step cannot be the same as the next step.",
             )
