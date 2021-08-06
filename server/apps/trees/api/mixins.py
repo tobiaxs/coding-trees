@@ -116,10 +116,8 @@ class TreeStepsMixin:
         if step.is_final:
             step_data["solution"] = step.solution
         else:
-            step_data["options"] = (
-                OptionSelector.for_step_name_and_tree(
-                    step.name,
-                    tree,
-                ),
+            step_data["options"] = OptionSelector.for_step_name_and_tree(
+                step.name,
+                tree,
             )
         return step_data
