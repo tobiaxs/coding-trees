@@ -5,11 +5,12 @@ from django.db import models
 from martor.models import MartorField
 from structlog import get_logger
 
-from server.apps.generic.models import GenericModelWithCreator
+from server.apps.generic.models import GenericModel, GenericModelWithCreator
 
 NAME_MAX_LENGTH = 63
 
-# TODO: Step and Option don't need a creator anymore.
+# TODO: Add inconsistencies model.
+# TODO: Description field to the tree.
 
 log = get_logger()
 
@@ -19,7 +20,6 @@ class Tree(GenericModelWithCreator):
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)
     paths = models.ManyToManyField("Path", related_name="trees", blank=True)
-    # TODO: Add inconsistencies model.
 
     def __str__(self) -> str:
         """Return the name of the tree.
@@ -46,8 +46,11 @@ class Path(GenericModelWithCreator):
         """
         return self.name
 
+    class Meta:
+        unique_together = ("name", "creator")
 
-class Step(GenericModelWithCreator):
+
+class Step(GenericModel):
     """Contain all the options in some part of the path.
 
     Final step also contain the solution.
@@ -89,14 +92,14 @@ class Step(GenericModelWithCreator):
             log.error(
                 "Step is both first and final.",
                 name=self.name,
-                creator=self.creator.email,
+                creator=self.path.creator.email,
             )
             raise ValidationError("A step cannot be both first and final.")
         if self.is_final == (self.solution is None):
             log.error(
                 "Solution is not on the final step.",
                 name=self.name,
-                creator=self.creator.email,
+                creator=self.path.creator.email,
             )
             raise ValidationError(
                 "A solution can only be (and has to be) set on the final step.",
@@ -119,7 +122,7 @@ class Step(GenericModelWithCreator):
         )
 
 
-class Option(GenericModelWithCreator):
+class Option(GenericModel):
     """Specific option in the step.
 
     Has to know which step it should lead to.
@@ -157,7 +160,7 @@ class Option(GenericModelWithCreator):
             log.error(
                 "Steps are equal.",
                 name=self.name,
-                creator=self.creator.email,
+                creator=self.step.path.creator.email,
             )
             raise ValidationError(
                 "A step cannot be the same as the next step.",

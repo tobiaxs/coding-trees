@@ -39,10 +39,7 @@ class StepViewSet(
             serializer (StepCreateSerializer): serializer holding
                 validated data.
         """
-        payload = StepCreatePayload(
-            creator=self.request.user,
-            **serializer.validated_data,
-        )
+        payload = StepCreatePayload(**serializer.validated_data)
         StepService.create_step_for_path(payload)
 
     def perform_update(self, serializer: StepUpdateSerializer) -> None:

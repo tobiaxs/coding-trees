@@ -38,10 +38,7 @@ class OptionViewSet(
             serializer (OptionInputSerializer): serializer holding
                 validated data.
         """
-        payload = OptionCreatePayload(
-            creator=self.request.user,
-            **serializer.validated_data,
-        )
+        payload = OptionCreatePayload(**serializer.validated_data)
         OptionService.create_option(payload)
 
     def perform_update(self, serializer: OptionInputSerializer) -> None:
