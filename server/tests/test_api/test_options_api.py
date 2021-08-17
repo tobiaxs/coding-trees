@@ -80,44 +80,13 @@ def test_option_update_api(
     option_factory: OptionFactory,
 ):
     """Test updating option instance using options api."""
-    option = option_factory(next_step=step_factory())
-    new_step = step_factory()
-
-    response = api_client.put(
-        reverse("trees:options-detail", kwargs={"pk": option.pk}),
-        data={"name": "Test Option Updated", "step": new_step.pk},
-    )
-    option.refresh_from_db()
-
-    assert response.status_code == HTTP_200_OK
-    assert option.name == "Test Option Updated"
-    assert option.step == new_step
-
-
-def test_option_update_api_with_both_steps(
-    api_client: APIClient,
-    step_factory: StepFactory,
-    option_factory: OptionFactory,
-):
-    """Test updating option instance using options api.
-
-    Both steps should be updated.
-    """
     option = option_factory()
-    new_step = step_factory()
-    new_next_step = step_factory()
 
     response = api_client.put(
         reverse("trees:options-detail", kwargs={"pk": option.pk}),
-        data={
-            "name": "Test Option Updated",
-            "step": new_step.pk,
-            "next_step": new_next_step.pk,
-        },
+        data={"name": "Test Option Updated"},
     )
     option.refresh_from_db()
 
     assert response.status_code == HTTP_200_OK
     assert option.name == "Test Option Updated"
-    assert option.step == new_step
-    assert option.next_step == new_next_step

@@ -107,6 +107,7 @@ class Step(GenericModel):
 
     class Meta:
         unique_together = ("name", "path")
+        ordering = ("created_at",)
         constraints = (
             models.CheckConstraint(
                 check=models.Q(is_first=False) | models.Q(is_final=False),
@@ -137,7 +138,7 @@ class Option(GenericModel):
     next_step = models.ForeignKey(
         "Step",
         related_name="preceding_options",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
     )
@@ -167,6 +168,8 @@ class Option(GenericModel):
             )
 
     class Meta:
+        unique_together = ("name", "step")
+        ordering = ("created_at",)
         constraints = [
             models.CheckConstraint(
                 check=~models.Q(step=models.F("next_step")),

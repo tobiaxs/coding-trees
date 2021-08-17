@@ -13,12 +13,13 @@ class OptionModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Option
-        fields = ("pk", "name", "next_step")
+        fields = ("pk", "name", "step", "next_step")
 
 
-class OptionInputSerializer(serializers.Serializer):
-    """Write only option serializer."""
+class OptionCreateSerializer(serializers.Serializer):
+    """Write only option serializer for creating instances."""
 
+    pk = serializers.UUIDField(read_only=True)
     name = serializers.CharField(max_length=NAME_MAX_LENGTH)
     step = serializers.PrimaryKeyRelatedField(queryset=Step.objects.all())
     next_step = serializers.PrimaryKeyRelatedField(
@@ -52,6 +53,13 @@ class OptionInputSerializer(serializers.Serializer):
 
     class Meta:
         fields = (
+            "pk",
             "name",
             "step",
         )
+
+
+class OptionUpdateSerializer(serializers.Serializer):
+    """Write only option serializer for updating instances."""
+
+    name = serializers.CharField(max_length=NAME_MAX_LENGTH)

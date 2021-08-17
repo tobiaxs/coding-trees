@@ -31,7 +31,6 @@ class StepModelSerializer(serializers.ModelSerializer):
             "is_final",
             "solution",
             "options",
-            "creator",
         )
 
 
@@ -57,6 +56,7 @@ class TreeStepModelSerializer(serializers.ModelSerializer):
 class StepCreateSerializer(serializers.Serializer):
     """Write only step serializer for creating instances."""
 
+    pk = serializers.UUIDField(read_only=True)
     name = serializers.CharField(max_length=NAME_MAX_LENGTH)
     is_first = serializers.BooleanField(default=False)
     is_final = serializers.BooleanField(default=False)
@@ -109,6 +109,7 @@ class StepCreateSerializer(serializers.Serializer):
 
     class Meta:
         fields = (
+            "pk",
             "name",
             "is_first",
             "is_final",

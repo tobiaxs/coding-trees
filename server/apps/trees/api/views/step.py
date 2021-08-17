@@ -40,7 +40,8 @@ class StepViewSet(
                 validated data.
         """
         payload = StepCreatePayload(**serializer.validated_data)
-        StepService.create_step_for_path(payload)
+        instance = StepService.create_step_for_path(payload)
+        serializer.validated_data["pk"] = instance.pk
 
     def perform_update(self, serializer: StepUpdateSerializer) -> None:
         """Update an existing Step instance using the step service.

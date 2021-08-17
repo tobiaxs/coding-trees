@@ -54,7 +54,5 @@ class OptionService:
             Option: updated option instance.
         """
         instance.name = payload["name"]
-        instance.step = payload["step"]
-        instance.next_step = payload.get("next_step")
         instance.save()
         return instance
