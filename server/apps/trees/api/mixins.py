@@ -2,12 +2,9 @@
 
 from uuid import UUID
 
-from drf_spectacular.utils import (
-    extend_schema,
-    OpenApiParameter,
-)
 from drf_spectacular.types import OpenApiTypes
-from rest_framework import fields, response, serializers, status, viewsets
+from drf_spectacular.utils import OpenApiParameter, extend_schema
+from rest_framework import response, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.request import Request
 
@@ -86,7 +83,7 @@ class TreeStepsMixin:
     @action(
         detail=True,
         methods=["get"],
-        url_path=r"change_step/(?P<step_uuid>[^/.]+)",
+        url_path=r"change_step/(?P<step_uuid>[^/.]+)",  # noqa: WPS360
     )
     def change_step(
         self: viewsets.ModelViewSet,
@@ -101,6 +98,7 @@ class TreeStepsMixin:
         Args:
             request (Request): incomming request.
             pk (UUID): primary key of the tree.
+            step_uuid (UUID): primary key of the step.
 
         Returns:
             Response: response with serialized step and its options,
