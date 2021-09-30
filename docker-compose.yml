@@ -10,9 +10,9 @@ services:
             context: .
             dockerfile: ./docker/Dockerfile
         volumes:
-            - .:/app/
+            - .:/app
         ports:
-            - 8001:8001
+            - 8000:8000
         depends_on:
             - postgres
         env_file:
@@ -23,7 +23,7 @@ services:
     postgres:
         container_name: trees-postgres
         image: postgres:latest
-        restart: always
+        restart: on-failure
         volumes:
             - postgres_data:/var/lib/postgresql/data
         env_file:

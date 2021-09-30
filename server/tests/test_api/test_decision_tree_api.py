@@ -101,12 +101,11 @@ def test_tree_next_step(
     tree = tree_factory()
     create_path_step_options_for_tree("First Step", tree, next_step=True)
     step = Step.objects.get(name="Second Step")
-    response = api_client.post(
+    response = api_client.get(
         reverse(
             "trees:trees-change-step",
-            kwargs={"pk": tree.pk},
+            kwargs={"pk": tree.pk, "step_uuid": step.pk},
         ),
-        data={"step": step.pk},
     )
 
     assert response.status_code == HTTP_200_OK
@@ -126,12 +125,11 @@ def test_tree_next_step_with_options(
     steps = Step.objects.filter(name="Second Step")
     for step in steps:
         option_factory(step=step)
-    response = api_client.post(
+    response = api_client.get(
         reverse(
             "trees:trees-change-step",
-            kwargs={"pk": tree.pk},
+            kwargs={"pk": tree.pk, "step_uuid": steps.last().pk},
         ),
-        data={"step": steps.last().pk},
     )
 
     assert response.status_code == HTTP_200_OK
@@ -153,12 +151,11 @@ def test_tree_next_step_with_solution(
     step.solution = solution_factory()
     step.save()
 
-    response = api_client.post(
+    response = api_client.get(
         reverse(
             "trees:trees-change-step",
-            kwargs={"pk": tree.pk},
+            kwargs={"pk": tree.pk, "step_uuid": step.pk},
         ),
-        data={"step": step.pk},
     )
 
     assert response.status_code == HTTP_200_OK

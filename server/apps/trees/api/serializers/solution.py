@@ -8,6 +8,8 @@ from server.apps.trees.models import NAME_MAX_LENGTH, Solution
 class SolutionModelSerializer(serializers.ModelSerializer):
     """Read only solution model serializer."""
 
+    author = serializers.CharField(source="creator.username")
+
     class Meta:
         model = Solution
         fields = (
@@ -15,17 +17,20 @@ class SolutionModelSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "creator",
+            "author",
         )
 
 
 class SolutionInputSerializer(serializers.Serializer):
     """Write only option serializer."""
 
+    pk = serializers.UUIDField(read_only=True)
     name = serializers.CharField(max_length=NAME_MAX_LENGTH)
     description = serializers.CharField()
 
     class Meta:
         fields = (
+            "pk",
             "name",
             "description",
         )

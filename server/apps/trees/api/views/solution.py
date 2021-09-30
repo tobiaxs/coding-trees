@@ -42,7 +42,8 @@ class SolutionViewSet(
             creator=self.request.user,
             **serializer.validated_data,
         )
-        SolutionService.create_solution(payload)
+        instance = SolutionService.create_solution(payload)
+        serializer.validated_data["pk"] = instance.pk
 
     def perform_update(self, serializer: SolutionInputSerializer) -> None:
         """Update an existing Solution instance using the solution service.

@@ -10,7 +10,6 @@ from server.apps.generic.models import GenericModel, GenericModelWithCreator
 NAME_MAX_LENGTH = 63
 
 # TODO: Add inconsistencies model.
-# TODO: Description field to the tree.
 
 log = get_logger()
 
@@ -19,6 +18,7 @@ class Tree(GenericModelWithCreator):
     """Highest level model, containing and grouping several paths."""
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)
+    description = models.TextField()
     paths = models.ManyToManyField("Path", related_name="trees", blank=True)
 
     def __str__(self) -> str:
