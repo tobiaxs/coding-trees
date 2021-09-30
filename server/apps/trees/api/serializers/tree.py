@@ -10,13 +10,16 @@ class TreeModelSerializer(serializers.ModelSerializer):
     """Read only tree model serializer with nested instances."""
 
     paths = PathModelSerializer(many=True, read_only=True)
+    author = serializers.CharField(source="creator.username")
 
     class Meta:
         model = Tree
         fields = (
             "pk",
             "name",
+            "description",
             "paths",
+            "author",
         )
 
 
@@ -24,9 +27,10 @@ class TreeCreateSerializer(serializers.Serializer):
     """Write only tree serializer for creating instances."""
 
     name = serializers.CharField(max_length=NAME_MAX_LENGTH)
+    description = serializers.CharField()
 
     class Meta:
-        fields = ("name",)
+        fields = ("name", "description")
 
 
 class TreeUpdateSerializer(serializers.Serializer):
@@ -41,4 +45,4 @@ class TreeUpdateSerializer(serializers.Serializer):
     )
 
     class Meta:
-        fields = ("name", "paths")
+        fields = ("name", "description", "paths")

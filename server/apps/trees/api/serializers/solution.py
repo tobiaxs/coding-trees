@@ -24,11 +24,13 @@ class SolutionModelSerializer(serializers.ModelSerializer):
 class SolutionInputSerializer(serializers.Serializer):
     """Write only option serializer."""
 
+    pk = serializers.UUIDField(read_only=True)
     name = serializers.CharField(max_length=NAME_MAX_LENGTH)
     description = serializers.CharField()
 
     class Meta:
         fields = (
+            "pk",
             "name",
             "description",
         )

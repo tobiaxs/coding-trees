@@ -31,6 +31,7 @@ class TreeFactory(factory.django.DjangoModelFactory):
     """Factory for tree model."""
 
     name = fuzzy.FuzzyText(length=10)
+    description = fuzzy.FuzzyText(length=30)
     creator = factory.SubFactory(UserFactory)
 
     class Meta:

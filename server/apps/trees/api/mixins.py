@@ -2,7 +2,11 @@
 
 from uuid import UUID
 
-from drf_spectacular.utils import extend_schema, inline_serializer
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter,
+)
+from drf_spectacular.types import OpenApiTypes
 from rest_framework import fields, response, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.request import Request
@@ -11,8 +15,12 @@ from server.apps.trees.api.serializers.step import TreeStepModelSerializer
 from server.apps.trees.models import Step, Tree
 from server.apps.trees.selectors import OptionSelector, StepSelector
 
-extend_step_schema = extend_schema(
-    request=inline_serializer("NextStep", {"step": fields.UUIDField()}),
+extend_first_step_schema = extend_schema(responses=TreeStepModelSerializer)
+
+extend_change_step_schema = extend_schema(
+    parameters=[
+        OpenApiParameter("step_uuid", OpenApiTypes.UUID, OpenApiParameter.PATH),
+    ],
     responses=TreeStepModelSerializer,
 )
 
@@ -40,7 +48,7 @@ class SerializerPerActionMixin:
 class TreeStepsMixin:
     """Add step selection actions to a tree view."""
 
-    @extend_step_schema
+    @extend_first_step_schema
     @action(detail=True, methods=["get"])
     def first_step(
         self: viewsets.ModelViewSet,
@@ -74,12 +82,17 @@ class TreeStepsMixin:
             data=data,
         )
 
-    @extend_step_schema
-    @action(detail=True, methods=["post"])
+    @extend_change_step_schema
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path=r"change_step/(?P<step_uuid>[^/.]+)",
+    )
     def change_step(
         self: viewsets.ModelViewSet,
         request: Request,
         pk: UUID,
+        step_uuid: UUID,
     ) -> response.Response:
         """Return response with the step for specific tree.
 
@@ -94,7 +107,7 @@ class TreeStepsMixin:
                 or solution if it's the last step.
         """
         tree = self.get_object()
-        step = Step.objects.get(pk=request.data["step"])
+        step = Step.objects.get(pk=step_uuid)
         step_data = self._build_step_data(tree, step)
         serializer = TreeStepModelSerializer(step_data)
         return response.Response(

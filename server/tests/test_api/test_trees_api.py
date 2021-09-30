@@ -15,7 +15,7 @@ def test_tree_create_api(api_client: APIClient):
     """Test creating tree instance using trees api."""
     response = api_client.post(
         reverse("trees:trees-list"),
-        data={"name": "Test Tree"},
+        data={"name": "Test Tree", "description": "Test Description"},
     )
 
     assert response.status_code == HTTP_201_CREATED
