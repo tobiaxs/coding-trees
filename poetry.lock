@@ -229,7 +229,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "drf-spectacular"
-version = "0.17.3"
+version = "0.20.1"
 description = "Sane and flexible OpenAPI 3 schema generation for Django REST framework"
 category = "main"
 optional = false
@@ -242,6 +242,10 @@ inflection = ">=0.3.1"
 jsonschema = ">=2.6.0"
 PyYAML = ">=5.1"
 uritemplate = ">=2.0.0"
+
+[package.extras]
+offline = ["drf-spectacular-sidecar"]
+sidecar = ["drf-spectacular-sidecar"]
 
 [[package]]
 name = "eradicate"
@@ -1224,7 +1228,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "0c7a772ec34246e58fe74ad8991a66ac919d3b50153584b76ac8bab409713604"
+content-hash = "589f0757f7db3445fd44418d026f2b9525ff86978e08bb455c8ff0bf354a9962"
 
 [metadata.files]
 alabaster = [
@@ -1362,8 +1366,8 @@ docutils = [
     {file = "docutils-0.16.tar.gz", hash = "sha256:c2de3a60e9e7d07be26b7f2b00ca0309c207e06c100f9cc2a94931fc75a478fc"},
 ]
 drf-spectacular = [
-    {file = "drf-spectacular-0.17.3.tar.gz", hash = "sha256:fb19aa69fcfcd37b0c9dfb9989c0671e1bb47af332ca2171378c7f840263788c"},
-    {file = "drf_spectacular-0.17.3-py3-none-any.whl", hash = "sha256:f080128c42183fcaed6b9e8e5afcd2e5cd68426b1f80bfc85938f25e62db7fe5"},
+    {file = "drf-spectacular-0.20.1.tar.gz", hash = "sha256:738471216c65c79eb6018dd8be9da28d2b1b7d8a05e1de7f99274c35dd70c15a"},
+    {file = "drf_spectacular-0.20.1-py3-none-any.whl", hash = "sha256:34ecb255b4bbe9646671430a4cd27266f2c867553e261168ab0c1bc2de8e59dd"},
 ]
 eradicate = [
     {file = "eradicate-2.0.0.tar.gz", hash = "sha256:27434596f2c5314cc9b31410c93d8f7e8885747399773cd088d3adea647a60c8"},
