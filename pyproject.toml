@@ -17,7 +17,7 @@ structlog = "^21.1.0"
 colorama = "^0.4.4"
 
 [tool.poetry.dev-dependencies]
-pre-commit = "^2.14.1"
+pre-commit = "^2.19.0"
 pytest = "^6.2.4"
 pytest-django = "^4.4.0"
 pytest-cov = "^2.12.1"
